@@ -5,6 +5,7 @@ use nalgebra_glm::Vec3;
 pub trait Polygon {
     fn polygon(&mut self, points: &Vec<Vec3>);
     fn filled_polygon(&mut self, points: &Vec<Vec3>);
+    fn filled_polygon_with_outline(&mut self, points: &Vec<Vec3>, fill_color: u32, outline_color: u32);
 }
 
 impl Polygon for Framebuffer {
@@ -55,5 +56,12 @@ impl Polygon for Framebuffer {
                 }
             }
         }
+    }
+
+    fn filled_polygon_with_outline(&mut self, points: &Vec<Vec3>, fill_color: u32, outline_color: u32) {
+        self.set_current_color(fill_color);
+        self.filled_polygon(points);
+        self.set_current_color(outline_color);
+        self.polygon(points);
     }
 }
