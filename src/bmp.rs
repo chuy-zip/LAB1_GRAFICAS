@@ -45,12 +45,12 @@ fn write_bmp_header(file: &mut BufWriter<File>, width: usize, height: usize) -> 
 
 fn write_pixel_data(file: &mut BufWriter<File>, buffer: &[u32], width: usize, height: usize) -> std::io::Result<()> {
     let padding_size = (4 - (width * BMP_BITS_PER_PIXEL / 8) % 4) % 4;
-    let padding = [0u8, 3];
+    let padding = [0u8; 3]; // Fixed the length of padding array
 
     for y in (0..height).rev() {
         for x in 0..width {
             let pixel = buffer[y * width + x];
-            let bgr = [(pixel >> 16) as u8, (pixel >> 8) as u8, pixel as u8];
+            let bgr = [(pixel & 0xFF) as u8, ((pixel >> 8) & 0xFF) as u8, ((pixel >> 16) & 0xFF) as u8];
 
             file.write_all(&bgr)?;
         }
