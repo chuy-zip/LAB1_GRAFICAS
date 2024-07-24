@@ -2,11 +2,11 @@ use crate::framebuffer::Framebuffer;
 use nalgebra_glm::Vec3;
 
 pub trait Line {
-    fn line(&mut self, start: Vec3, end: Vec3);
+    fn line(&mut self, start: Vec3, end: Vec3, thickness: u32);
 }
 
 impl Line for Framebuffer {
-    fn line(&mut self, start: Vec3, end: Vec3) {
+    fn line(&mut self, start: Vec3, end: Vec3, thickness: u32) {
         let dx = (end.x as i32 - start.x as i32).abs();
         let dy = -(end.y as i32 - start.y as i32).abs();
 
@@ -18,7 +18,12 @@ impl Line for Framebuffer {
         let mut current = start.map(|x| x as i32);
 
         loop {
-            self.point(current.x as usize, current.y as usize);
+            for i in 0..thickness as i32 {
+                self.point((current.x + i) as usize, current.y as usize);
+                self.point((current.x - i) as usize, current.y as usize);
+                self.point(current.x as usize, (current.y + i) as usize);
+                self.point(current.x as usize, (current.y - i) as usize);
+            }
 
             if current == end.map(|x| x as i32) {
                 break;

@@ -3,13 +3,13 @@ use crate::line::Line;
 use nalgebra_glm::Vec3;
 
 pub trait Polygon {
-    fn polygon(&mut self, points: &Vec<Vec3>);
+    fn polygon(&mut self, points: &Vec<Vec3>, thickness: u32);
     fn filled_polygon(&mut self, points: &Vec<Vec3>);
-    fn filled_polygon_with_outline(&mut self, points: &Vec<Vec3>, fill_color: u32, outline_color: u32);
+    fn filled_polygon_with_outline(&mut self, points: &Vec<Vec3>, fill_color: u32, outline_color: u32, thickness: u32);
 }
 
 impl Polygon for Framebuffer {
-    fn polygon(&mut self, points: &Vec<Vec3>) {
+    fn polygon(&mut self, points: &Vec<Vec3>, thickness: u32) {
         if points.len() < 3 {
             return;
         }
@@ -18,7 +18,7 @@ impl Polygon for Framebuffer {
             let start = points[i];
             let end = points[(i + 1) % points.len()];
 
-            self.line(start, end);
+            self.line(start, end, thickness);
         }
     }
 
@@ -58,10 +58,10 @@ impl Polygon for Framebuffer {
         }
     }
 
-    fn filled_polygon_with_outline(&mut self, points: &Vec<Vec3>, fill_color: u32, outline_color: u32) {
+    fn filled_polygon_with_outline(&mut self, points: &Vec<Vec3>, fill_color: u32, outline_color: u32, thickness: u32) {
         self.set_current_color(fill_color);
         self.filled_polygon(points);
         self.set_current_color(outline_color);
-        self.polygon(points);
+        self.polygon(points, thickness);
     }
 }

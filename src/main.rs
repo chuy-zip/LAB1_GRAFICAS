@@ -30,7 +30,7 @@ fn main() {
         Vec3::new(193.0, 383.0, 0.0),
     ];
 
-    framebuffer.filled_polygon_with_outline(&points, 0xFFFF00, 0xFFFFFF);
+    framebuffer.filled_polygon_with_outline(&points, 0xFFFF00, 0xFFFFFF, 2);
 
     let _ = framebuffer.render_buffer("out.bmp");
 }
